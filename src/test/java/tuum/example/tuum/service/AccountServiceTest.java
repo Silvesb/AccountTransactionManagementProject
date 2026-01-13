@@ -85,7 +85,7 @@ class AccountServiceTest {
         account.setId(1337L);
         account.setCustomerId(2L);
         account.setCountry("EE");
-        when(accountRepo.findById(5L)).thenReturn(account);
+        when(accountRepo.findById(1337L)).thenReturn(account);
 
         Balance eur = new Balance();
         eur.setAccountId(1337L);
@@ -93,7 +93,7 @@ class AccountServiceTest {
         eur.setAvailableAmount(new BigDecimal("12.00"));
         when(balRepo.findByAccountId(1337L)).thenReturn(List.of(eur));
 
-        AccountResponse response = accountService.getAccount(5L);
+        AccountResponse response = accountService.getAccount(1337L);
 
         assertThat(response.getAccountId()).isEqualTo(1337L);
         assertThat(response.getBalances()).hasSize(1);
