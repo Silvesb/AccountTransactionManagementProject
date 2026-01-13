@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tuum
+      POSTGRES_USER: tuum
+      POSTGRES_PASSWORD: tuum
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    environment:
+      RABBITMQ_DEFAULT_USER: tuum
+      RABBITMQ_DEFAULT_PASS: tuum
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: tuum
+      DB_USER: tuum
+      DB_PASSWORD: tuum
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USER: tuum
+      RABBIT_PASSWORD: tuum
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - rabbitmq
